@@ -1,0 +1,83 @@
+{% extends 'base.html' %}
+{% block title %} Home{% endblock title %}
+{% block body %}
+
+<div class="container my-3">
+    <h2>Add a Todo</h2>
+    {% if error %}
+        <div style="color: red;">
+            <strong>{{ error }}</strong>
+        </div>
+    {% endif %}
+    <form action="/" method="POST">
+        <div class="mb-3">
+            <label for="title" class="form-label">Title</label>
+            <input type="text" class="form-control" name="title" id="title" aria-describedby="emailHelp">
+        </div>
+        <div class="mb-3">
+            <label for="desc" class="form-label">Description</label>
+            <input type="text" class="form-control" name="desc" id="desc">
+        </div>
+        <div class="mb-3">
+            <label for="user" class="form-label">Assign User</label>
+            <input type="text" class="form-control" name="user" id="user"> <!-- New user input -->
+        </div>
+
+        <div class="mb-3">
+            <label for="status" class="form-label">Task Status</label>
+            <select class="form-control" name="status" id="status"> <!-- Dropdown for status -->
+                <option value="Open">Open</option>
+                <option value="In-progress">In-progress</option>
+                <option value="Done">Done</option>
+            </select>
+        </div>
+
+        <button type="submit" class="btn btn-success btn-lg float-end">Submit</button>
+    </form>
+</div>
+
+<div class="container my-3">
+    <h2>Your Todos</h2>
+    
+    {% if not allTodo %}
+        <div class="alert alert-dark" role="alert">
+            No Todos found. Add your first todo now!
+        </div>
+    {% else %}
+        <table class="table">
+            <thead>
+                <tr>
+                    <th scope="col">SNo</th>
+                    <th scope="col">Title</th>
+                    <th scope="col">Description</th>
+                    <th scope="col">User</th> <!-- New column for User -->
+                    <th scope="col">Status</th> <!-- New column for Status -->
+                    <th scope="col">Time</th>
+                    <th scope="col">Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for todo in allTodo %}
+                <tr>
+                    <th scope="row">{{ loop.index }}</th>
+                    <td>{{ todo.title }}</td>
+                    <td>{{ todo.desc }}</td>
+                    <td>{{ todo.user }}</td> <!-- Display user -->
+                    <td>{{ todo.status }}</td> <!-- Display status -->
+                    <td>{{ todo.date_created }}</td>
+                    <td>
+                        <a href="/update/{{ todo.sno }}" type="button" class="btn btn-outline-warning btn-sm mx-1">Update</a>
+
+                        <!-- Form for delete -->
+                        <form action="/delete/{{ todo.sno }}" method="POST" style="display:inline;">
+                            <button type="submit" class="btn btn-outline-danger btn-sm mx-1">Delete</button>
+                        </form>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% endif %}
+</div>
+
+{% endblock body %}
